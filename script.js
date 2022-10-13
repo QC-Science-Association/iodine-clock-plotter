@@ -20,6 +20,7 @@ function eSquared() {
 function rSquared() {
 	const avg = dataPoints.reduce((a, v) => a + v[1], 0) / dataPoints.length;
 	const SStot = dataPoints.reduce((a, v) => a + (v[1] - avg) * (v[1] - avg), 0) / dataPoints.length;
+	if (SStot === 0) return 1;
 	return 1 - (eSquared() / SStot);
 }
 function diffESquared_M() {
@@ -40,8 +41,8 @@ function trainModel() {
 	model.c = 0;
 	for (let i = 0; i < 300000; i++) {
 		const dm = diffESquared_M(), dc = diffESquared_C();
-		model.m -= 0.0001 / Math.sign(dm) * (Math.abs(dm) + 1);
-		model.c -= 0.0001 / Math.sign(dc) * (Math.abs(dc) + 1);
+		if (dm !== 0) model.m -= 0.0001 / Math.sign(dm) * (Math.abs(dm) + 1);
+		if (dc !== 0) model.c -= 0.0001 / Math.sign(dc) * (Math.abs(dc) + 1);
 	}
 }
 
@@ -68,8 +69,13 @@ function rerenderDatapoints() {
 			${inputX}<br>${inputY}<br>${deleteButton}
 		</div>`;
 	}
-	document.getElementById("equationpredictor").innerText = `${model.m.toFixed(7)}t + ${model.c.toFixed(7)}`;
-	document.getElementById("rsquared").innerText = rSquared().toFixed(5);
+	if (dataPoints.length >= 2) {
+		document.getElementById("equationpredictor").innerText = `${model.m.toFixed(7)}t + ${model.c.toFixed(7)}`;
+		document.getElementById("rsquared").innerText = rSquared().toFixed(5);
+	} else {
+		document.getElementById("equationpredictor").innerText = "?t + ?";
+		document.getElementById("rsquared").innerText = "?";
+	}
 }
 
 function rerenderDatapointsAndTrain() {
