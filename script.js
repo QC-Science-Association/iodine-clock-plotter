@@ -12,6 +12,9 @@ try {
 function modelYAt(x) {
 	return model.m * x + model.c;
 }
+function modelXAt(y) {
+	return (y - model.c) / model.m;
+}
 function eSquared() {
 	let error = 0;
 	for (const data of dataPoints) error += (data[1] - modelYAt(data[0])) * (data[1] - modelYAt(data[0]));
@@ -39,10 +42,10 @@ function diffESquared_C() {
 function trainModel() {
 	model.m = 0;
 	model.c = 0;
-	for (let i = 0; i < 300000; i++) {
+	for (let i = 0; i < 500000; i++) {
 		const dm = diffESquared_M(), dc = diffESquared_C();
-		if (dm !== 0) model.m -= 0.0001 / Math.sign(dm) * (Math.abs(dm) + 1);
-		if (dc !== 0) model.c -= 0.0001 / Math.sign(dc) * (Math.abs(dc) + 1);
+		if (dm !== 0) model.m -= 0.00003 / Math.sign(dm) * (Math.abs(dm) + 0.5);
+		if (dc !== 0) model.c -= 0.00003 / Math.sign(dc) * (Math.abs(dc) + 0.5);
 	}
 }
 
@@ -82,6 +85,7 @@ function rerenderDatapointsAndTrain() {
 	trainModel();
 	rerenderDatapoints();
 	updateTimeEstimate();
+	updateVolEstimate();
 	localStorage.setItem(storageKey, JSON.stringify(dataPoints));
 }
 
@@ -91,6 +95,13 @@ function updateTimeEstimate() {
 	document.getElementById("outputpredicttime").innerText = `${Math.exp(modelYAt(
 		Number(document.getElementById("inputpredicttime").value)
 	)).toFixed(3)}mL`;
+}
+
+function updateVolEstimate() {
+	if (dataPoints.length < 2) return document.getElementById("outputpredictvol").innerText = "???s";
+	document.getElementById("outputpredictvol").innerText = `${modelXAt(Math.log(
+		Number(document.getElementById("inputpredictvol").value)
+	)).toFixed(3)}s`;
 }
 
 

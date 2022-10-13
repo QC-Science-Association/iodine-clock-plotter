@@ -16,14 +16,20 @@
 	<br>
 	<br>
 	Vol. of solution B to be used for time
-	<input type="number" id="inputpredicttime" oninput="updateTimeEstimate()" size="5"/>s:
+	<input type="number" id="inputpredicttime" oninput="updateTimeEstimate()" value="1" />s:
 	<br>
 	<span id="outputpredicttime">???mL</span>
+	<br>
+	Time needed for
+	<input type="number" id="inputpredictvol" oninput="updateVolEstimate()" value="1" />mL
+	of solution B:
+	<br>
+	<span id="outputpredictvol">???s</span>
 	<br>
 	<br>
 	Graph (WORK IN PROGRESS)
 	<br>
-	- y axis: ln(amount of B used)
+	- y axis: ln(vol of B used)
 	<br>
 	- x axis: time
 	<br>
