@@ -46,8 +46,8 @@ function trainModel() {
 	model.c = 0;
 	for (let i = 0; i < 500000; i++) {
 		const dm = diffESquared_M(), dc = diffESquared_C();
-		if (dm !== 0) model.m -= 0.00003 / Math.sign(dm) * (Math.abs(dm) + 0.5);
-		if (dc !== 0) model.c -= 0.00003 / Math.sign(dc) * (Math.abs(dc) + 0.5);
+		if (dm !== 0) model.m -= 0.000003 * dm;
+		if (dc !== 0) model.c -= 0.0003 * dc;
 	}
 }
 
